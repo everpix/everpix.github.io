@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<!-- © 2011-2013 33cube, Inc. All rights reserved. -->
+<!--[if lte IE 7 ]> <html lang="en" class="no-js oldie"> <![endif]-->
+<!--[if IE 8 ]> <html lang="en" class="no-js ie8"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--> <html lang="en" class="no-js"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+  <title>Everpix - Archive Help</title>
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <link rel="icon" sizes="16x16" href="assets/images/icons/favicon_16.png">
+  <link rel="icon" sizes="32x32" href="assets/images/icons/favicon_32.png">
+
+  <meta property="og:image" content="assets/images/icons/facebook.png"/>
+
+  <!-- HTML5 elements for IE8 -->
+  <!--[if lt IE 9]>
+  <script type="text/javascript">
+    document.createElement('section');
+  </script>
+  <![endif]-->
+
+  <link rel="stylesheet" type="text/css" href="assets/css/base.css">
+  <link rel="stylesheet" type="text/css" href="assets/css/page.archives.css">
+
+</head>
+<body>
+
+  <div id="main">
+    <section id="technical-info">
+      <h1>Everpix photo collection archive technical info</h1>
+
+      <p><strong>A photo collection archive is the export of the raw data of your Everpix user account as stored on our servers (this includes all photos and associated metadata). Although this export is in a format based on open standards, some details are Everpix specific.</strong></p>
+
+      <p><strong>To avoid problems, please do not unzip the zip files unless you have read and understand the entire document below.</strong></p>
+
+      <p>Our <a href="#unarchiver">Mac Unarchiver app</a> can recreate JPEG files with metadata like EXIF from the contents of an Everpix photo collection archive - scroll down for details. There are currently no plans to release an equivalent app for Windows or Linux. Some other online services have used this document to independently create their own Everpix account archive importers.</p>
+
+      <h2>Files</h2>
+
+      <ul>
+        <li>
+          <strong>metadata.sqlite</strong>
+          <ul>
+            <li>SQLite database contains account and photo metadata: metadata from JPEG files (EXIF, XMP, etc.), information about the sources photos were imported from, photo pages you shared, photo mails you sent and received, statistics about your account, etc.</li>
+          </ul>
+        </li>
+        <li>
+          <strong>photos-XX-YY.zip</strong> or <strong>photos-XX.zip</strong>
+          <ul>
+            <li>Each zip file contains up to 2GB of photo files in JPEG 2000 format. Most photo and imaging software can open JPEG 2000 files and convert them to JPEG. Please see the help for your software on how to do this.</li>
+            <li>These photos files do not include JPEG metadata (like timestamps and camera information); that is all in the metadata.sqlite file.</li>
+            <li>Filenames are 32-character hexadecimal hash values. Files with the same first 2 characters in their filename are grouped into directories (e.g., all 00… are stored in the 00/ directory), and directories are grouped into zip files. The zip file photos-XX-YY.zip contains directories XX through YY (e.g., photos-00-03.zip would contain 00/, 01/, 02/ and 03/). Very large accounts may have zip files with names like photos-XX.zip, which contain only directory XX.</li>
+          </ul>
+        </li>
+      </ul>
+
+      <h2>Metadata tables</h2>
+
+      <p><em>Not all data contained in the metadata dump is necessary to extract your photos. To avoid adding confusing details this article focuses on just the data you will need.</em></p>
+
+      <ul>
+        <li>
+          <strong>inbox_mails</strong> (one row per Photo Mail)
+          <ul>
+            <li>mail_id: unique id for a Photo Mail you received</li>
+            <li>visibility: 2 = new, 1 = read, 0 = hidden, -1 = deleted but not yet purged</li>
+            <li>timestamp: when the Photo Mail was sent</li>
+            <li>source_uuid: id of a row in the <strong>sources</strong> table corresponding to the Photo Mail’s sender</li>
+            <li>source_metadata: information about the sender</li>
+            <li>subject: subject text associated with the Photo Mail</li>
+            <li>body: main message body text associated with the Photo Mail</li>
+          </ul>
+        </li>
+
+        <li>
+          <strong>inbox_mails_photos</strong> (one row per photo attached to a Photo Mail)
+          <ul>
+            <li>mail_id: id of the Photo Mail this photo is attached to</li>
+            <li>pid: id of the photo itself (see the <strong>photos</strong> table below)</li>
+            <li>source_pid: id of the corresponding row in <strong>photos_instances</strong></li>
+          </ul>
+        </li>
+
+        <li>
+          <strong>photos</strong>
+          <ul>
+            <li>pid: unique id of this photo</li>
+            <li>backing: id of the .jp2 file containing the image (see <strong>photos-XX-YY.zip</strong> or <strong>photos-XX.zip</strong>). This is a binary value, while the .jp2 file names are corresponding lower-case hexadecimal values
+              <ul>
+                <li>To convert binary to hexadecimal in Python, use binasciia.b2a_hex(&nbsp;&nbsp;<em>backing</em>&nbsp;&nbsp;)</li>
+              </ul>
+            </li>
+            <li>timestamp: Unix timestamp when the photo was taken. Assume timezone is UTC</li>
+            <li>visibility: 1 = visible, 0 = hidden, -1 = deleted but not yet purged</li>
+            <li>pixels_wide, pixels_high: photo dimensions</li>
+            <li>color_profile_id: shortcut values for common color profiles (check photos_instances ICC header for actual ICC color profile data):<br/>
+<pre>other         0
+sRGB          1
+Adobe RGB     2
+Apple RGB     3
+Generic RGB   4
+Camera RGB    5</pre>
+            </li>
+          </ul>
+        </li>
+
+        <li>
+          <strong>photos_instances</strong> (describes a particular source of a photo--photos may have multiple sources due to duplicates)
+          <ul>
+            <li>source_pid: unique id of this photo instance</li>
+            <li>pid: id of the corresponding <strong>photos</strong> row</li>
+            <li>bid: binary encoding of the first 32 hex chars of the corresponding .jp2 file. If a photo has multiple photo instances, the photo instance(s) whose <em>bid</em> value is a prefix of the photo's <em>backing</em> value are considered <em>primary</em>. Color profiles should be applied from a primary photo instance.</li>
+            <li>source_uuid: id of the row in the <strong>sources</strong> table corresponding to the source of this photo</li>
+            <li>album_uuid: id of the album within the source that this came from</li>
+            <li>album_name: name of the album this photo came from</li>
+            <li>source_metadata: <em>may</em> contain photo metadata from the source (e.g. file name) - for newer photos, this will be in the <strong>photo_instance_blobs</strong> table instead
+              <ul>
+                <li>Format: zlib-compressed, binary pickle-encoded Python data</li>
+                <li>To decode in Python: cPickle.loads(zlib.decompress(&nbsp;&nbsp;<em>source_metadata</em>&nbsp;&nbsp;))</li>
+                <li>The result will be a self-explanatory dict of source metadata</li>
+              </ul>
+            </li>
+            <li>headers: <em>may</em> contain EXIF and other JPEG metadata blobs (aka "headers) - for newer photos, this will be in the <strong>photo_instance_blobs</strong> table instead
+              <ul>
+                <li>Format: zlib-compressed, binary pickle-encoded Python data</li>
+                <li>To decode in Python: cPickle.loads(zlib.decompress(&nbsp;&nbsp;<em>headers</em>&nbsp;&nbsp;))</li>
+                <li>The result will be a dict from JPEG header type names ("EXIF", "ICC", "XMP", "IRB", "TEXT") to binary data</li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+
+        <li>
+          <strong>photo_instance_blobs</strong>
+          <ul>
+            <li>source_pid: id of corresponding <strong>photos_instances</strong> row</li>
+            <li>blob_data: EXIF and other JPEG metadata blobs (aka "headers")
+              <ul>
+                <li>Format: zlib-compressed, binary pickle-encoded Python data</li>
+                <li>To decode in Python: cPickle.loads(zlib.decompress(&nbsp;&nbsp;<em>blob_data</em>&nbsp;&nbsp;))</li>
+                <li>The result will be a pair of dicts; the first dict is self-explanatory source metadata and the second dict maps JPEG header type names ("EXIF", "ICC", "XMP", "IRB", "TEXT") to binary data</li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+
+        <li>
+          <strong>shared_snapshots</strong> (Photo Pages)
+          <ul>
+            <li>sid: unique id of a Photo Page</li>
+            <li>created_date: Unix timestamp of when the Photo Page was created</li>
+            <li>title: title of the Photo Page</li>
+            <li>photos: encoded list of pids of photos on this photo page. Format: binary pickle-encoded Python list of binary strings</li>
+          </ul>
+        </li>
+
+        <li>
+          <strong>sources</strong> (describes sources photos came from)
+          <ul>
+            <li>source_uuid: unique id of a source (e.g., a folder, an iPhoto album, etc.)</li>
+            <li>source_type: the type of source (join with sources__source_types for source type name)</li>
+            <li>source_name: name of the source</li>
+            <li>device_uuid: id of the device (computer, phone, etc.) this source is part of</li>
+            <li>device_type: the type of the device (join with sources__device_types for device type name)</li>
+            <li>device_name: name of the device</li>
+          </ul>
+        </li>
+      </ul>
+    </section>
+    <section id="unarchiver">
+      <h1>Using the Everpix Unarchiver for Mac</h1>
+
+      <p><strong>Everpix Unarchiver is a Mac app that can recreate JPEG files with metadata like EXIF from the contents of an <a href="#technical-info">Everpix photo collection archive</a>. There are currently no plans to release an equivalent app for Windows or Linux.</strong></p>
+
+      <p>This article assumes you already have requested and downloaded your Everpix photo collection archive.</p>
+
+      <ul>
+        <li>Get started by downloading the app from this link (requires OS X 10.7 or later):
+<a href="files/Everpix_Mac_Unarchiver_1.0.1.zip">http://www.everpix.com/files/Everpix_Mac_Unarchiver_1.0.1.zip</a></li>
+
+        <li>Go to your Downloads folder, then double-click the downloaded .zip file to extract the app, and finally double-click on the Everpix Unarchiver app to launch it.</li>
+
+        <li>In the open dialog that appears, select the "metadata.sqlite" file from the photo collection archive you downloaded.</li>
+
+        <li>The new window on screen displays the list of all available photos.</li>
+
+        <li>Select the photos you want to export as JPEG files from the archive then click "Export". In the open dialog that appears, select a destination folder where to store the exported photos. If this folder already contains some photos with the same names, they will not be overwritten and new names will be chosen.</li>
+
+        <li>Wait for the export to complete. Do not quit the app until it is done.</li>
+      </ul>
+
+      <p><strong>IMPORTANT:</strong></p>
+
+      <ul>
+        <li>Before proceeding with the app, make sure all the archive files (i.e. "metadata.sqlite" and associated "photos-....zip") have been downloaded and are all in the same folder.</li>
+
+        <li>You must use the original .zip files downloaded from Everpix - attempting to re-create the zip files with the compress option in the Finder will not work. If the .zip files have been automatically expanded by your web browser after download, look for them in the Finder Trash.</li>
+
+        <li>Exported JPEG files will contain embedded metadata like EXIF, XMP, etc. For photos that have duplicates in your Everpix collection (e.g. the same photo imported both from iPhoto and Gmail), the metadata of the primary photo will be preferred.</li>
+
+        <li>If you edited the timestamp or orientation of your photos in Everpix, the exported photos will preserve these new values.</li>
+      </ul>
+    </section>
+  </div>
+
+  <!-- Google Analytics -->
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-23684672-1']);
+    _gaq.push(['_setDomainName', 'www.everpix.com']);
+    //_gaq.push(['_setCustomVar', 1, 'User', apiGetAuthtoken() ? 'Member' : 'Visitor', 2]);
+    _gaq.push(['_trackPageview']);
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+</body>
+</html>

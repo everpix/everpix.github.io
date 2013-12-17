@@ -1,0 +1,102 @@
+/* © 2011-2013 33cube, Inc. All rights reserved. */
+
+html {
+  background:#1a1a1a;
+}
+body {
+  min-width:320px;
+  min-height:340px;
+}
+
+#main {
+  position:absolute;
+  top:0;
+  bottom:0;
+  left:0;
+  right:0;
+  width:300px;
+  height:170px;
+  padding:50px 10px;
+  margin:auto;
+
+  color:#fff;
+  text-align:center;
+}
+#main h1 {
+  width:246px;
+  height:56px;
+  margin:0 auto 44px;
+
+  background:url('../images/rip_sprite.png') 0 0 no-repeat;
+  background-image:-webkit-image-set(url('../images/rip_sprite.png') 1x, url('../images/rip_sprite-2x.png') 2x);
+
+  font:0/0 'a';
+  color:transparent;
+  text-shadow:none;
+}
+
+#main h2 {
+  font-size:16px;
+  line-height:20px;
+}
+
+#main p {
+  margin-top:12px;
+
+  font-size:14px;
+  line-height:18px;
+  color:#4c4c4c;
+}
+#main p > a {
+  color:#4c4c4c;
+  text-decoration:underline;
+}
+
+#footer {
+  content:" ";
+  display:block;
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  width:300px;
+  margin:15px auto;
+
+  font-size:11px;
+  line-height:15px;
+  color:#4c4c4c;
+  text-align:center;
+}
+#footer a {
+  padding:0 3px;
+  color:#4c4c4c;
+  text-decoration:none;
+}
+#footer a:hover {
+  text-decoration:underline;
+}
+
+#footer:before {
+  content:" ";
+  display:block;
+  width:206px;
+  height:25px;
+  margin:0 auto 30px;
+
+  background:url('../images/rip_sprite.png') 0 -108px no-repeat;
+  background-image:-webkit-image-set(url('../images/rip_sprite.png') 1x, url('../images/rip_sprite-2x.png') 2x);
+}
+@media screen and (max-height:500px) {
+  #main {
+    bottom:125px;
+  }
+}
+@media screen and (max-height:375px) {
+  #main {
+    position:relative;
+    bottom:0;
+  }
+  #footer {
+    position:relative;
+  }
+}
