@@ -10,13 +10,13 @@ body * { -webkit-font-smoothing: antialiased !important; }
 
 body, button, input, select, textarea { font-family:sans-serif; color:#222; }
 
-h1, h2, h3, h4, h5, h6 { margin:0; font-size:inherit; font-weight:600; }
+h1, h2, h3, h4, h5, h6 { margin:0; font-size:inherit; font-weight:bold; }
 p { margin:0; font-size:inherit; }
 
 a { color:#000; }
 a:hover, a:active { outline:0; }
 
-b, strong { font-weight:700; }
+b, strong { font-weight:bold; }
 hr { display:block; height:1px; border:0; border-top:1px solid #ccc; margin:1em 0; padding:0; }
 
 sub, sup { font-size:75%; line-height:0; position:relative; vertical-align:baseline; }
@@ -38,56 +38,6 @@ table { border-collapse:collapse; border-spacing:0; }
 
 /*--- Base Styles ---*/
 
-@font-face {
-  font-family:"DIN Web";
-  src: url("../fonts/DINWeb.eot");
-  src: url("../fonts/DINWeb.eot?#iefix") format("embedded-opentype"),
-       url("../fonts/DINWeb.woff") format("woff");
-  font-weight:400;
-  font-style:normal;
-}
-@font-face {
-  font-family:"DIN Web";
-  src: url("../fonts/DINWeb.eot");
-  src: url("../fonts/DINWeb.eot?#iefix") format("embedded-opentype"),
-       url("../fonts/DINWeb-Ita.woff") format("woff");
-  font-weight:400;
-  font-style:italic;
-}
-@font-face {
-  font-family:"DIN Web";
-  src: url("../fonts/DINWeb.eot");
-  src: url("../fonts/DINWeb.eot?#iefix") format("embedded-opentype"),
-       url("../fonts/DINWeb-Light.woff") format("woff");
-  font-weight:300;
-  font-style:normal;
-}
-@font-face {
-  font-family:"DIN Web";
-  src: url("../fonts/DINWeb.eot");
-  src: url("../fonts/DINWeb.eot?#iefix") format("embedded-opentype"),
-       url("../fonts/DINWeb-LightIta.woff") format("woff");
-  font-weight:300;
-  font-style:italic;
-}
-@font-face {
-  font-family:"DIN Web";
-  src: url("../fonts/DINWeb.eot");
-  src: url("../fonts/DINWeb.eot?#iefix") format("embedded-opentype"),
-       url("../fonts/DINWeb-Bold.woff") format("woff");
-  font-weight:700;
-  font-style:normal;
-}
-@font-face {
-  font-family:"DIN Web";
-  src: url("../fonts/DINWeb.eot");
-  src: url("../fonts/DINWeb.eot?#iefix") format("embedded-opentype"),
-       url("../fonts/DINWeb-BoldIta.woff") format("woff");
-  font-weight:700;
-  font-style:italic;
-}
-
 body {
-  font-family:"DIN Web", Helvetica, Arial, sans-serif;
-  font-weight:400;
+  font-family:"ff-din-web", Helvetica, Arial, sans-serif;
 }
