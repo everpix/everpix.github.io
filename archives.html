@@ -38,9 +38,7 @@
 
       <p><strong>A photo collection archive is the export of the raw data of your Everpix user account as stored on our servers (this includes all photos and associated metadata). Although this export is in a format based on open standards, some details are Everpix specific.</strong></p>
 
-      <p><strong>To avoid problems, please do not unzip the zip files unless you have read and understand the entire document below.</strong></p>
-
-      <p>Our <a href="#unarchiver">Mac Unarchiver app</a> can recreate JPEG files with metadata like EXIF from the contents of an Everpix photo collection archive - scroll down for details. There are currently no plans to release an equivalent app for Windows or Linux. Some other online services have used this document to independently create their own Everpix account archive importers.</p>
+      <p>The Everpix team has released a <a href="#unarchiver">Mac app</a> (see below) that can recreate JPEG files with metadata like EXIF from the contents of an Everpix photo collection archive. Some other online photo services have used this document to independently create their own importers.</p>
 
       <h2>Files</h2>
 
@@ -177,9 +175,9 @@ Camera RGB    5</pre>
     <section id="unarchiver">
       <h1>Using the Everpix Unarchiver for Mac</h1>
 
-      <p><strong>Everpix Unarchiver is a Mac app that can recreate JPEG files with metadata like EXIF from the contents of an <a href="#technical-info">Everpix photo collection archive</a>. There are currently no plans to release an equivalent app for Windows or Linux.</strong></p>
+      <p><strong>Everpix Unarchiver is a Mac app that can recreate JPEG files with metadata like EXIF from the contents of an Everpix photo collection archive. An open source version of this app is also available on <a href="https://github.com/everpix/Everpix-Unarchiver" target="_blank">GitHub</a>. There are no plans to release an equivalent app for Windows or Linux.</strong></p>
 
-      <p>This article assumes you already have requested and downloaded your Everpix photo collection archive.</p>
+      <p>Before proceeding with the app, make sure all the archive files (i.e. "metadata.sqlite" and associated "photos-....zip") have been downloaded and are all in the same folder. You must use the original .zip files downloaded from Everpix - attempting to re-create the zip files with the compress feature in the Finder will not work. If the .zip files have been automatically expanded by your web browser after download, look for them in the Finder Trash.</p>
 
       <ul>
         <li>Get started by downloading the app from this link (requires OS X 10.7 or later):
@@ -196,17 +194,10 @@ Camera RGB    5</pre>
         <li>Wait for the export to complete. Do not quit the app until it is done.</li>
       </ul>
 
-      <p><strong>IMPORTANT:</strong></p>
+      <p>Exported JPEG files will contain embedded metadata like EXIF, XMP, etc. For photos that have duplicates in your Everpix collection (e.g. the same photo imported both from iPhoto and Gmail), the metadata of the primary photo will be preferred.</p>
 
-      <ul>
-        <li>Before proceeding with the app, make sure all the archive files (i.e. "metadata.sqlite" and associated "photos-....zip") have been downloaded and are all in the same folder.</li>
+      <p>If you edited the timestamp or orientation of your photos in Everpix, the exported photos will preserve these new values.</p>
 
-        <li>You must use the original .zip files downloaded from Everpix - attempting to re-create the zip files with the compress option in the Finder will not work. If the .zip files have been automatically expanded by your web browser after download, look for them in the Finder Trash.</li>
-
-        <li>Exported JPEG files will contain embedded metadata like EXIF, XMP, etc. For photos that have duplicates in your Everpix collection (e.g. the same photo imported both from iPhoto and Gmail), the metadata of the primary photo will be preferred.</li>
-
-        <li>If you edited the timestamp or orientation of your photos in Everpix, the exported photos will preserve these new values.</li>
-      </ul>
     </section>
   </div>
 
