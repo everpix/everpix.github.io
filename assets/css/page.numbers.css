@@ -219,7 +219,7 @@ section *:first-child {
 /*--- Graphs ---*/
 .graph {
   position:relative;
-  margin-bottom:10px;
+  margin-bottom:15px;
 }
 .graph-content {
   width:600px;
@@ -229,9 +229,12 @@ section *:first-child {
   left:0 !important;
   text-align:left;
 }
+.flot-x-axis > div {
+  white-space:nowrap;
+}
 
 .graph-legend {
-  padding:5px 0;
+  padding:5px 0 0;
 }
 .graph-legend.hidden {
   display:none;
@@ -239,7 +242,7 @@ section *:first-child {
 .legendLabel {
   padding:3px 16px 0 0;
 
-  color:#a3a3a3;
+  color:#808080;
   line-height:22px;
 }
 .legendColorBox > div {
@@ -255,7 +258,8 @@ section *:first-child {
 .graph-tooltip {
   display:none;
   position:absolute;
-  padding:5px;
+  padding:4px 5px 3px;
+  margin-top:-12px;
 
   -webkit-box-sizing:border-box;
      -moz-box-sizing:border-box;
@@ -264,10 +268,27 @@ section *:first-child {
   border:none;
 
   background-color:#000;
-  background-color:rgba(0,0,0,0.6);
+  background-color:rgba(0,0,0,0.7);
 
   font-size:11px;
   color:#fff;
+  text-align:center;
+  white-space:nowrap;
+}
+.graph-tooltip:after {
+  content:" ";
+  display:block;
+  position:absolute;
+  top:100%;
+  left:50%;
+  width:0;
+  height:0;
+  margin-left:-5px;
+
+  border-style:solid;
+  border-width:6px 5px 0 5px;
+  border-color:#000 transparent transparent transparent;
+  border-color:rgba(0,0,0,0.7) transparent transparent transparent;
 }
 .graph-tooltip-series {
   display:block;
@@ -284,6 +305,22 @@ section *:first-child {
 }
 .graph-tooltip.visible {
   display:block;
+}
+
+/* Graph Overrides */
+#app-stats\/ios-installs .flot-x-axis > div {
+  margin: -1px 0 0 20px;
+
+  -webkit-transform: rotate(60deg);
+     -moz-transform: rotate(60deg);
+      -ms-transform: rotate(60deg);
+       -o-transform: rotate(60deg);
+          transform: rotate(60deg);
+  -webkit-transform-origin: center top;
+     -moz-transform-origin: center top;
+      -ms-transform-origin: center top;
+       -o-transform-origin: center top;
+          transform-origin: center top;
 }
 
 /*--- Expandoid ---*/
