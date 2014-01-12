@@ -137,15 +137,18 @@ $(function() {
         hasPoints = $th.data("points") !== undefined,
         usesPercentages = $th.data("percentages") !== undefined,
         usesDollars = $th.data("dollars") !== undefined,
+        isLogarithmic = $th.data("logarithmic") !== undefined,
         json = $th.data("json"),
         numSeries = 0,
         formattedData = [],
         barsOverrides = {},
         linesOverrides = {},
         pointsOverrides = {},
+        pieOverrides = {},
         xaxisOverrides = {},
         yaxisOverrides = {},
         gridOverrides = {},
+        legendOverrides = {},
         $plot = $th.find(".graph-content"),
         $legend = $th.find(".graph-legend"),
         $tooltip = $th.find(".graph-tooltip"),
@@ -259,6 +262,16 @@ $(function() {
       }
     }
 
+    if (type === "pie") {
+      tooltipLabelFormatter = function(data) {
+        return addCommas(data[1]);
+      };
+
+      tooltipValueFormatter = function(data, series) {
+        return series.percent.toFixed(1) + "%";
+      }
+    }
+
     if (usesPercentages) {
       yaxisOverrides.tickFormatter = function(tick) {
         return Math.round(100 * tick) + "%";
@@ -279,6 +292,15 @@ $(function() {
       };
     }
 
+    if (isLogarithmic) {
+      yaxisOverrides.transform = function(v) { return Math.log(v + 0.01); };
+      yaxisOverrides.inverseTransform = function(v) { return Math.exp(v); };
+      yaxisOverrides.ticks = [0.01, 0.1, 1, 10, 100];
+      yaxisOverrides.tickFormatter = function(tick) {
+        return addCommas(tick);
+      };
+    }
+
     if (hasPoints) {
       pointsOverrides = {
         show : true,
@@ -288,6 +310,18 @@ $(function() {
 
     // Special cases
     switch ($th.parents(".subsection").attr("id")) {
+      case "users/countries-free" :
+        pieOverrides.combine = {
+          threshold : 0.032
+        };
+        break;
+
+      case "users/countries-subscribers" :
+        pieOverrides.combine = {
+          threshold : 0.0165
+        };
+        break;
+
       case "app-stats/ios-installs" :
         xaxisOverrides.labelWidth = 10;
         xaxisOverrides.labelHeight = 10;
@@ -327,7 +361,7 @@ $(function() {
               fill : isFilled ? 1 : 0
             }, linesOverrides),
           points : pointsOverrides,
-          pie : {
+          pie : $.extend(true, {
               show : type === "pie",
               radius : 1,
               shadow : {
@@ -340,16 +374,16 @@ $(function() {
                   left : -35
                 },
               label : {
-                  show: true,
+                  show: false,
                   radius: 2 / 3,
                   formatter: function (label, series) {
-                      return '<div style="font-size:12px;text-align:center;padding:2px;color:#fff;"><strong>' + label + '</strong><br/>' + series.percent.toFixed(1) + '% ('+ series.data[0][1] + ')</div>';
+                      return '<div style="font-size:12px;text-align:center;color:#fff;font-weight:bold;">' + label + '</div>';
                     }
                 },
               highlight : {
                   opacity : 0
                 }
-            },
+            }, pieOverrides),
           shadowSize : 0
         },
       xaxis : $.extend(true, {
@@ -382,11 +416,11 @@ $(function() {
           borderColor : "#000",
           hoverable : true
         }, gridOverrides),
-      legend : {
+      legend : $.extend(true, {
           show : numSeries > 1,
           noColumns : Math.min(numSeries,4),
           container : $legend
-        },
+        }, legendOverrides),
       colors : [
           "#e57300",
           "#e4c951",
@@ -399,45 +433,69 @@ $(function() {
         ]
     });
 
-    if (type !== "pie") {
-      $plot.on("plothover", function(e, pos, item) {
-        var plotOffset,
-            barPixelWidth = 0,
-            tipWd,
-            tipHt;
+    $plot.on("plothover", function(e, pos, item) {
+      var plotOffset,
+          plotWd,
+          plotHt,
+          halfAngle,
+          radius,
+          barPixelWidth,
+          tipWd,
+          tipHt,
+          newTop = 0,
+          newLeft = 0;
 
-        if (!item) {
-          tooltipItemSeriesIndex = undefined;
-          tooltipItemDataIndex = undefined;
+      if (!item) {
+        tooltipItemSeriesIndex = undefined;
+        tooltipItemDataIndex = undefined;
 
-          $tooltip.removeClass("visible").css({
-            top : 0,
-            left : 0
-          });
-        } else if (tooltipItemSeriesIndex !== item.seriesIndex || tooltipItemDataIndex !== item.dataIndex) {
-          tooltipItemSeriesIndex = item.seriesIndex;
-          tooltipItemDataIndex = item.dataIndex;
+        $tooltip.removeClass("visible").css({
+          top : 0,
+          left : 0
+        });
+      } else if (tooltipItemSeriesIndex !== item.seriesIndex || tooltipItemDataIndex !== item.dataIndex) {
+        tooltipItemSeriesIndex = item.seriesIndex;
+        tooltipItemDataIndex = item.dataIndex;
 
-          $tooltip.find(".graph-tooltip-series").html(item.series.label).toggleClass("hidden", numSeries === 1);
-          $tooltip.find(".graph-tooltip-label").html(tooltipLabelFormatter(item.series.data[item.dataIndex]));
-          $tooltip.find(".graph-tooltip-value").html(tooltipValueFormatter(item.series.data[item.dataIndex]));
+        $tooltip.find(".graph-tooltip-series").html(item.series.label).toggleClass("hidden", numSeries === 1);
+        $tooltip.find(".graph-tooltip-label").html(tooltipLabelFormatter(item.series.data[item.dataIndex], item.series));
+        $tooltip.find(".graph-tooltip-value").html(tooltipValueFormatter(item.series.data[item.dataIndex], item.series));
 
+        if (type === "pie") {
+          plotWd = $plot.width();
+          plotHt = $plot.height();
+
+          halfAngle = ((item.series.startAngle + item.series.angle) + item.series.startAngle) / 2;
+
+          radius = Math.min(plotWd, plotHt) * 0.3;
+
+          tipWd = $tooltip.outerWidth();
+          tipHt = $tooltip.outerHeight();
+
+          newLeft = Math.round(Math.cos(halfAngle) * radius) + (plotWd / 2) + (item.series.pie.offset.left || 0) - (tipWd / 2);
+          newTop = Math.round(Math.sin(halfAngle) * radius) + (plotHt / 2) + (item.series.pie.offset.top || 0) - tipHt;
+        } else {
           plotOffset = $plot.offset();
 
           if (type === "bars") {
-            barPixelWidth = Math.ceil(item.series.bars.barWidth * item.series.xaxis.scale) + 1;
+            barPixelWidth = Math.ceil(item.series.bars.barWidth * item.series.xaxis.scale);
+          } else {
+            barPixelWidth = 0;
           }
 
           tipWd = $tooltip.outerWidth();
           tipHt = $tooltip.outerHeight();
 
-          $tooltip.css({
-            top : item.pageY - plotOffset.top - tipHt,
-            left : item.pageX - plotOffset.left - (tipWd / 2) + (barPixelWidth / 2)
-          }).addClass("visible");
+          newLeft = item.pageX - plotOffset.left - (tipWd / 2) + (barPixelWidth / 2) + 1;
+          newTop = item.pageY - plotOffset.top - tipHt;
         }
-      });
-    }
+
+        $tooltip.css({
+          top : newTop,
+          left : newLeft
+        }).addClass("visible");
+      }
+    });
 
     if (numSeries === 1) {
       $legend.addClass("hidden");
@@ -460,7 +518,7 @@ function formatForFlot(inputData, seriesNames, precision) {
 
   _(dataPoints).each(function(dataPoint) {
     var key = _(dataPoint).first()["v"],
-        values = _(dataPoint).chain().rest().pluck("v").value(),
+        values = _(dataPoint).rest(),
         datePieces;
 
     // Parse the key
@@ -480,10 +538,12 @@ function formatForFlot(inputData, seriesNames, precision) {
 
     // Make a data pair for each value
     _(values).each(function(value, index) {
-      if (!!precision) {
-        value = parseFloat(value.toFixed(+precision));
+      if (value === null) {
+        value = 0
+      } else if (!!precision) {
+        value = parseFloat(value.v.toFixed(+precision));
       } else {
-        value = Math.round(value);
+        value = Math.round(value.v);
       }
       seriesData[index].push([key, value]);
     });

@@ -244,6 +244,7 @@ section *:first-child {
 
   color:#808080;
   line-height:22px;
+  white-space:nowrap;
 }
 .legendColorBox > div {
   border:none !important;
