@@ -1,0 +1,38 @@
+{
+  "Mac": [
+    ["Monday", 16.12],
+    ["Tuesday", 14.604],
+    ["Wednesday", 29.702],
+    ["Thursday", 21.436],
+    ["Friday", 22.567],
+    ["Saturday", 21.587],
+    ["Sunday", 20.046]
+  ],
+  "Windows": [
+    ["Monday", 6.64],
+    ["Tuesday", 26.267],
+    ["Wednesday", 16.395],
+    ["Thursday", 16.475],
+    ["Friday", 27.155],
+    ["Saturday", 14.42],
+    ["Sunday", 12.608]
+  ],
+  "iOS": [
+    ["Monday", 24.043],
+    ["Tuesday", 40.523],
+    ["Wednesday", 40.949],
+    ["Thursday", 44.459],
+    ["Friday", 28.463],
+    ["Saturday", 29.308],
+    ["Sunday", 26.64]
+  ],
+  "Android": [
+    ["Monday", 24.113],
+    ["Tuesday", 31.38],
+    ["Wednesday", 27.855],
+    ["Thursday", 24.898],
+    ["Friday", 36.238],
+    ["Saturday", 26.835],
+    ["Sunday", 20.581]
+  ]
+}
