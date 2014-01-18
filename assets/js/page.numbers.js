@@ -583,6 +583,12 @@ $(function() {
     }
 
     if (!$th.hasClass("rendered")) {
+      Spinner.show(id);
+
+      dfd.done(function() {
+        Spinner.hide(id);
+      });
+
       if ($th.data("json")) {
         setItUp($th.data("json"));
       } else if ($th.data("load")) {
@@ -590,6 +596,8 @@ $(function() {
         $.getJSON($th.data("load")).done(setItUp).fail(function() {
           dfd.resolve();
         });
+      } else {
+        dfd.resolve();
       }
     } else {
       dfd.resolve();
@@ -598,3 +606,29 @@ $(function() {
     return dfd.promise();
   });
 });
+
+var Spinner = (function() {
+  var showRequests = {},
+      $spinner = $("#activity");
+
+  function hide(id) {
+    if (showRequests[id]) {
+      delete showRequests[id];
+    }
+
+    if ($.isEmptyObject(showRequests)) {
+      $spinner.removeClass("visible");
+    }
+  }
+
+  function show(id) {
+    $spinner.addClass("visible");
+
+    showRequests[id] = true;
+  }
+
+  return {
+    hide : hide,
+    show : show
+  }
+})();
