@@ -4,7 +4,7 @@ html {
   background:#fff;
 }
 body {
-  min-width:960px;
+  min-width:640px;
 
   font-size:14px;
   line-height:17px;
@@ -14,11 +14,18 @@ body {
 .content {
   position:relative;
   width:800px;
+  padding:0 20px;
   margin:auto;
-
-  -webkit-box-sizing:border-box;
-     -moz-box-sizing:border-box;
-          box-sizing:border-box;
+}
+@media screen and (max-width:840px) {
+  .content {
+    width:750px;
+  }
+}
+@media screen and (max-width:790px) {
+  .content {
+    width:600px;
+  }
 }
 
 .button {
@@ -132,7 +139,19 @@ body {
   border-bottom:1px solid #000;
 }
 #intro .content {
+  width:720px;
   padding:190px 60px 120px;
+}
+
+@media screen and (max-width:840px) {
+  #intro .content {
+    width:670px;
+  }
+}
+@media screen and (max-width:790px) {
+  #intro .content {
+    width:520px;
+  }
 }
 #intro p {
   font-size:18px;
@@ -143,11 +162,23 @@ body {
   margin-top:12px;
 }
 
+/*--- Main ---*/
+#main {
+  width:100%;
+  overflow:hidden;
+}
+
 /*--- Nav ---*/
 #sectionNav {
   position:absolute;
   top:0;
-  padding:45px 0;
+  width:120px;
+  padding:45px 15px;
+  margin-left:-35px;
+  z-index:2;
+
+  background:#fff;
+  background:rgba(255,255,255,0.85);
 }
 #sectionNav.sticky {
   position:fixed;
@@ -174,6 +205,7 @@ body {
 /*--- Sections ---*/
 section {
   width:600px;
+
   margin-left:200px;
   padding:45px 0;
 }
@@ -214,6 +246,17 @@ section *:first-child {
 
 .subsection {
   margin-top:45px;
+}
+
+@media screen and (max-width:840px) {
+  section {
+    margin-left:150px;
+  }
+}
+@media screen and (max-width:790px) {
+  section {
+    margin-left:0;
+  }
 }
 
 /*--- Graphs ---*/
@@ -422,7 +465,12 @@ section *:first-child {
 
 /*--- Timeline ---*/
 .timeline-container {
+  width:500px;
   padding-left:34px;
+
+  -webkit-box-sizing:border-box;
+     -moz-box-sizing:border-box;
+          box-sizing:border-box;
 }
 .timeline-container:before {
   content:" ";

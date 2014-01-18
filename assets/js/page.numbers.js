@@ -394,6 +394,10 @@ $(function() {
           };
           break;
 
+        case "photos/total" :
+          legendOverrides.noColumns = 2;
+          break;
+
         case "app-stats/ios-installs" :
           xaxisOverrides.labelWidth = 10;
           xaxisOverrides.labelHeight = 10;
