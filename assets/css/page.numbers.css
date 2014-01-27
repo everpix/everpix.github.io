@@ -407,6 +407,61 @@ section *:first-child {
           transform-origin: center top;
 }
 
+/*--- Tables ---*/
+.table {
+  width:100%;
+  margin-bottom:15px;
+}
+.table th,
+.table td {
+  padding:5px 10px;
+  border-bottom:1px solid #ccc;
+
+  text-align:left;
+}
+.table th {
+  border-bottom-color:#000;
+}
+.table th.numeric,
+.table td.numeric {
+  text-align:right;
+}
+
+.table tr:last-child td {
+  border-bottom:none;
+}
+.table td.dot:before {
+  content:" ";
+  display:inline-block;
+  float:left;
+  width:8px;
+  height:8px;
+  margin:4px 10px 4px 0;
+
+  background:#e57300;
+
+  -webkit-border-radius:4px;
+     -moz-border-radius:4px;
+          border-radius:4px;
+}
+.table tr + tr td.dot:before { background:#e57300; }
+.table tr + tr + tr td.dot:before { background:#e4c951; }
+.table tr + tr + tr + tr td.dot:before { background:#899ab3; }
+.table tr + tr + tr + tr + tr td.dot:before { background:#7f739f; }
+.table tr + tr + tr + tr + tr + tr td.dot:before { background:#84bcbb; }
+.table tr + tr + tr + tr + tr + tr + tr td.dot:before { background:#a0a983; }
+.table tr + tr + tr + tr + tr + tr + tr + tr td.dot:before { background:#b1796b; }
+.table tr + tr + tr + tr + tr + tr + tr + tr + tr td.dot:before { background:#e09f66; }
+
+/* Table Overrides */
+#email\/unsubscribes .table {
+  width:400px;
+}
+#email\/unsubscribes .table th:first-child,
+#email\/unsubscribes .table td:first-child {
+  width:75%;
+}
+
 /*--- Expandoid ---*/
 .expandoid {
   position:relative;
