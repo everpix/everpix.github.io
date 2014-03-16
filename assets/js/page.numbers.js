@@ -352,9 +352,7 @@ $(function() {
         tooltipValueFormatter = function(data) {
           return (100 * data[1]).toFixed(1) + "%";
         };
-      }
-
-      if (usesDollars) {
+      } else if (usesDollars) {
         yaxisOverrides.tickFormatter = function(tick) {
           return "$" + (tick > 10 ? addCommas(tick) : tick.toFixed(2));
         };
@@ -362,12 +360,14 @@ $(function() {
         tooltipValueFormatter = function(data) {
           return "$" + addCommas(data[1].toFixed(2));
         };
-      }
-
-      if (isLogarithmic) {
+      } else if (isLogarithmic) {
         yaxisOverrides.transform = function(v) { return Math.log(v + 0.01); };
         yaxisOverrides.inverseTransform = function(v) { return Math.exp(v); };
         yaxisOverrides.ticks = [0.01, 0.1, 1, 10, 100];
+        yaxisOverrides.tickFormatter = function(tick) {
+          return addCommas(tick);
+        };
+      } else {
         yaxisOverrides.tickFormatter = function(tick) {
           return addCommas(tick);
         };
