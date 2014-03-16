@@ -382,6 +382,10 @@ $(function() {
 
       // Special cases
       switch ($th.parents(".subsection").attr("id")) {
+        case "users/origins" :
+          yaxisOverrides.max = 1;
+          break;
+
         case "users/countries-free" :
           pieOverrides.combine = {
             threshold : 0.032
