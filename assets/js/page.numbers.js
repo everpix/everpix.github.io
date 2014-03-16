@@ -400,6 +400,9 @@ $(function() {
 
         case "photos/total" :
           legendOverrides.noColumns = 2;
+          tooltipValueFormatter = function(data) {
+            return addCommas(data[1] * 1000000);
+          };
           break;
 
         case "app-stats/ios-installs" :
