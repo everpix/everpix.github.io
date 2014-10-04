@@ -79,7 +79,7 @@ body {
   padding-bottom:3px;
 }
 
-/*--- Header ---*/
+/*-- Header --*/
 #header {
   position:relative;
   width:100%;
@@ -131,7 +131,7 @@ body {
   background-image:-webkit-image-set(url('../images/rip_sprite.png') 1x, url('../images/rip_sprite-2x.png') 2x);
 }
 
-/*--- Intro ---*/
+/*-- Intro --*/
 #intro {
   width:100%;
   margin:0;
@@ -162,13 +162,13 @@ body {
   margin-top:12px;
 }
 
-/*--- Main ---*/
+/*-- Main --*/
 #main {
   width:100%;
   overflow:hidden;
 }
 
-/*--- Nav ---*/
+/*-- Nav --*/
 #sectionNav {
   position:absolute;
   top:0;
@@ -203,7 +203,7 @@ body {
   text-decoration:none;
 }
 
-/*--- Activity Spinner ---*/
+/*-- Activity Spinner --*/
 #activity {
   display:none;
   position:fixed;
@@ -242,7 +242,7 @@ body {
 }
 
 
-/*--- Sections ---*/
+/*-- Sections --*/
 section {
   width:600px;
 
@@ -299,7 +299,7 @@ section *:first-child {
   }
 }
 
-/*--- Graphs ---*/
+/*-- Graphs --*/
 .graph {
   position:relative;
   margin-bottom:15px;
@@ -407,7 +407,7 @@ section *:first-child {
           transform-origin: center top;
 }
 
-/*--- Tables ---*/
+/*-- Tables --*/
 .table {
   width:100%;
   margin-bottom:15px;
@@ -462,7 +462,7 @@ section *:first-child {
   width:75%;
 }
 
-/*--- Expandoid ---*/
+/*-- Expandoid --*/
 .expandoid {
   position:relative;
 }
@@ -558,7 +558,7 @@ section *:first-child {
   bottom:15px;
 }
 
-/*--- Timeline ---*/
+/*-- Timeline --*/
 .timeline-container {
   width:500px;
   padding-left:34px;
@@ -666,7 +666,7 @@ section *:first-child {
   font-weight:bold;
 }
 
-/*--- Profit and Loss Table ---*/
+/*-- Profit and Loss Table --*/
 .pl-table {
   width:410px;
 }
@@ -715,7 +715,7 @@ tr.pl-loss td + td {
   font-weight:bold;
 }
 
-/*--- Press Coverage ---*/
+/*-- Press Coverage --*/
 .pressItems {
   width:500px;
   list-style-type:none;
@@ -739,7 +739,7 @@ tr.pl-loss td + td {
   content:" - ";
 }
 
-/*--- VC Feedback ---*/
+/*-- VC Feedback --*/
 #vc-feedback h5 {
   margin-top:24px;
 }
