@@ -131,9 +131,6 @@ $(function() {
           $.scrollTo($section, {
             duration : 500,
             easing : "easeInOutQuad",
-            offset : {
-                top : Math.round($window.height() / -4)
-              },
             onAfter : function() {
                 updateSectionsOnChange = true;
               }
@@ -147,11 +144,11 @@ $(function() {
 
   $navLinks = $navUl.find("a");
 
-  $window.on("scroll resize orientationchange", function() {
+  $window.on("scroll resize orientationchange", _.debounce(function() {
     var scrollTop = $window.scrollTop(),
         windowHeight,
         documentHeight,
-        thirdLine,
+        threshold,
         $sectionToSelect;
 
     // $("#sectionNav").css("top", scrollTop > mainTop ? scrollTop - mainTop : 0);
@@ -164,12 +161,12 @@ $(function() {
       if (scrollTop + windowHeight >= $(document).height()) {
         $sectionToSelect = $sections.last();
       } else {
-        thirdLine = scrollTop + Math.round(windowHeight / 4);
+        threshold = scrollTop + Math.round(windowHeight / 4);
 
         $sections.each(function() {
           var $th = $(this);
 
-          if ($th.offset().top <= thirdLine) {
+          if ($th.offset().top <= threshold) {
             $sectionToSelect = $th;
           } else {
             return false;
@@ -181,7 +178,7 @@ $(function() {
         switchToSection($sectionToSelect.attr("id"));
       }
     }
-  });
+  }, 16));
 
   // Expandoids
   $(".expandoid").each(function() {
